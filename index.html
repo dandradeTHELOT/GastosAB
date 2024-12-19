@@ -69,24 +69,60 @@
         <img src="https://images.ecestaticos.com/wXg3pC_MHDheDsWOYMvrGpK0Cqc=/44x1:2226x1227/1600x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F96e%2Ff73%2Fdd7%2F96ef73dd7c0b0bb9cabf553f06528c92.jpg" alt="Header Image">
     </div>
     <div class="form-container">
-        <form>
-            <label for="name">Nombre:</label>
-            <input type="text" id="name" name="name" required>
+        <form id="myForm">
+            <label for="Nombre">Nombre:</label>
+            <input type="text" id="Nombre" name="Nombre" required>
 
-            <label for="tdc">TDC:</label>
-            <input type="text" id="tdc" name="tdc" required>
+            <label for="TDC">TDC:</label>
+            <input type="text" id="TDC" name="TDC" required>
 
-            <label for="commerce">Comercio compra:</label>
-            <input type="text" id="commerce" name="commerce" required>
+            <label for="Comercio">Comercio compra:</label>
+            <input type="text" id="Comercio" name="Comercio" required>
 
-            <label for="amount">Monto compra:</label>
-            <input type="number" id="amount" name="amount" required>
+            <label for="Monto">Monto compra:</label>
+            <input type="number" id="Monto" name="Monto" required>
 
-            <label for="date">Fecha compra:</label>
-            <input type="date" id="date" name="date" placeholder="dd/mm/yyyy" required>
+            <label for="Fecha">Fecha compra:</label>
+            <input type="date" id="Fecha" name="Fecha" placeholder="dd/mm/yyyy" required>
 
             <button type="submit">Enviar</button>
         </form>
     </div>
+
+    <script>
+        // Obtén el formulario y agrega un evento de envío
+        document.getElementById('myForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Previene el comportamiento predeterminado del formulario (recarga de página)
+
+            // Obtén los datos del formulario
+            const formData = {
+                Nombre: document.getElementById('Nombre').value,
+                TDC: document.getElementById('TDC').value,
+                Comercio: document.getElementById('Comercio').value,
+                Monto: document.getElementById('Monto').value,
+                Fecha: document.getElementById('Fecha').value
+            };
+
+            // Envía los datos al script de Google Apps usando fetch
+            fetch('https://script.google.com/macros/s/AKfycbxH9eTguMSgDy_l6rfweXrsjdkjzI8gOj-67kGZE4Ixi_Q5Hnm10k1OfoOCCKB9Uj-f/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json()) // Convierte la respuesta a JSON
+            .then(data => {
+                if (data.status === 'success') {
+                    alert('Datos enviados correctamente!');
+                } else {
+                    alert('Hubo un problema al enviar los datos');
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error);
+            });
+        });
+    </script>
 </body>
 </html>
