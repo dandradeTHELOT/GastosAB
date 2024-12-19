@@ -14,13 +14,14 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
         .form-container {
             background-color: #ffffff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 400px;
         }
         .form-container label {
             display: block;
@@ -38,6 +39,9 @@
             border-radius: 4px;
             color: #2e75c1;
         }
+        .form-container input[type="date"]::placeholder {
+            color: #2e75c1;
+        }
         .form-container button {
             width: 100%;
             padding: 10px;
@@ -51,9 +55,18 @@
         .form-container button:hover {
             background-color: #1a4e7a;
         }
+        .header-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
+    <div class="header-image">
+        <img src="https://images.ecestaticos.com/wXg3pC_MHDheDsWOYMvrGpK0Cqc=/44x1:2226x1227/1600x900/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F96e%2Ff73%2Fdd7%2F96ef73dd7c0b0bb9cabf553f06528c92.jpg" alt="Header Image">
+    </div>
     <div class="form-container">
         <form>
             <label for="name">Nombre:</label>
@@ -69,7 +82,7 @@
             <input type="number" id="amount" name="amount" required>
 
             <label for="date">Fecha compra:</label>
-            <input type="date" id="date" name="date" required>
+            <input type="date" id="date" name="date" placeholder="dd/mm/yyyy" required>
 
             <button type="submit">Enviar</button>
         </form>
