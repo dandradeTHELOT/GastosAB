@@ -52,6 +52,8 @@
     .field input::placeholder { color: var(--muted); }
     .field select option { background: #fff; }
     .field input[type="number"] { font-family: var(--mono); }
+    .field input[type="date"] { font-family: var(--mono); cursor: pointer; }
+    .field input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; filter: invert(20%) sepia(80%) saturate(500%) hue-rotate(190deg); }
 
     /* MSI toggle */
     .msi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; user-select: none; }
@@ -181,6 +183,10 @@
         <input id="inp-concepto" type="text" placeholder="Ej. Supermercado, gasolina..." />
       </div>
       <div class="field">
+        <label>Fecha de compra</label>
+        <input id="inp-fecha" type="date" />
+      </div>
+      <div class="field">
         <label>Cantidad total (MXN)</label>
         <input id="inp-cantidad" type="number" placeholder="0.00" min="0" step="0.01" />
       </div>
@@ -244,6 +250,7 @@
             <tr>
               <th>Nombre</th>
               <th>Tarjeta</th>
+              <th>Fecha</th>
               <th>Concepto</th>
               <th style="text-align:right">Total</th>
               <th style="text-align:right">Mensual</th>
@@ -364,6 +371,7 @@
     const nombre   = document.getElementById('inp-nombre').value;
     const tarjeta  = document.getElementById('inp-tarjeta').value;
     const concepto = document.getElementById('inp-concepto').value.trim();
+    const fecha    = document.getElementById("inp-fecha").value;
     const cantidad = parseFloat(inpCantidad.value);
     const esMSI    = toggleMSI.checked;
     const meses    = esMSI ? parseInt(inpMeses.value) : null;
@@ -371,7 +379,7 @@
     const btn      = document.getElementById('btn-agregar');
     const user     = auth.currentUser;
 
-    if (!nombre || !tarjeta || !concepto || isNaN(cantidad) || cantidad <= 0) {
+    if (!nombre || !tarjeta || !concepto || !fecha || isNaN(cantidad) || cantidad <= 0) {
       errEl.textContent = 'Completa todos los campos correctamente.';
       errEl.style.display = 'block'; return;
     }
@@ -385,7 +393,7 @@
 
     try {
       const data = {
-        nombre, tarjeta, concepto, cantidad,
+        nombre, tarjeta, concepto, fecha, cantidad,
         esMSI: esMSI,
         meses: esMSI ? meses : null,
         pagomensual: esMSI ? parseFloat((cantidad / meses).toFixed(2)) : null,
@@ -398,6 +406,7 @@
       document.getElementById('inp-nombre').value   = '';
       document.getElementById('inp-tarjeta').value  = '';
       document.getElementById('inp-concepto').value = '';
+      document.getElementById('inp-fecha').value = '';
       inpCantidad.value = '';
       toggleMSI.checked = false;
       msiFields.classList.remove('visible');
@@ -437,6 +446,7 @@
       <tr>
         <td class="td-nombre">${g.nombre}</td>
         <td><span class="tag-tarjeta">${g.tarjeta}</span>${g.esMSI ? `<span class="tag-msi">${g.meses}MSI</span>` : ''}</td>
+        <td style="font-family:var(--mono);font-size:12px;color:var(--muted)">${g.fecha || '—'}</td>
         <td class="td-concepto">${g.concepto}</td>
         <td class="td-cantidad">${fmt(g.cantidad)}</td>
         <td class="td-mensual">${g.esMSI ? fmt(g.pagomensual) + '/mes' : '—'}</td>
@@ -488,6 +498,7 @@
     const datos = gastosActuales.map(g => ({
       Nombre:   g.nombre,
       Tarjeta:  g.tarjeta,
+      Fecha: g.fecha || '',
       Concepto: g.concepto,
       'Total ($)': g.cantidad,
       'MSI':    g.esMSI ? `${g.meses} meses` : 'No',
