@@ -20,16 +20,14 @@
     }
     body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
 
-    /* LOGIN */
     #login-screen { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
     .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem 2rem; width: 100%; max-width: 360px; text-align: center; }
     .login-card h2 { font-size: 1.3rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 6px; }
     .login-card h2 span { color: var(--accent); font-family: var(--mono); }
     .login-card p { font-size: 13px; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
     .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: var(--surface2); color: var(--text); border: 1px solid var(--border-hover); border-radius: 10px; font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: background 0.2s; }
-    .btn-google:hover { background: #2a2a32; }
+    .btn-google:hover { background: #d0ddf0; }
 
-    /* APP */
     #app-screen { display: none; }
     header { max-width: 1100px; margin: 0 auto 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
     header h1 { font-size: 1.4rem; font-weight: 500; letter-spacing: -0.02em; }
@@ -44,7 +42,6 @@
     .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
     .layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; align-items: start; }
-
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
     .card-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; font-family: var(--mono); }
 
@@ -53,21 +50,39 @@
     .field input, .field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 14px; font-family: var(--sans); outline: none; transition: border-color 0.2s; }
     .field input:focus, .field select:focus { border-color: var(--accent); }
     .field input::placeholder { color: var(--muted); }
-    .field select option { background: var(--surface2); }
+    .field select option { background: #fff; }
     .field input[type="number"] { font-family: var(--mono); }
+
+    /* MSI toggle */
+    .msi-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; user-select: none; }
+    .msi-row:hover { border-color: var(--accent); }
+    .toggle-wrap { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .toggle-wrap input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track { position: absolute; inset: 0; background: #c5d3e8; border-radius: 20px; transition: background 0.2s; }
+    .toggle-wrap input:checked + .toggle-track { background: var(--accent); }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .toggle-wrap input:checked ~ .toggle-thumb { transform: translateX(16px); }
+    .msi-label { font-size: 13px; font-weight: 500; color: var(--text); }
+    .msi-badge { margin-left: auto; font-size: 10px; font-family: var(--mono); background: var(--accent-dim); color: var(--accent); padding: 2px 7px; border-radius: 20px; }
+
+    /* MSI meses field */
+    #msi-fields { display: none; background: rgba(0,58,126,0.05); border: 1px solid rgba(0,58,126,0.2); border-radius: 10px; padding: 12px; margin-bottom: 14px; }
+    #msi-fields.visible { display: block; }
+    .msi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .msi-pago-mensual { margin-top: 8px; font-size: 12px; color: var(--accent); font-family: var(--mono); text-align: center; padding: 6px; background: var(--accent-dim); border-radius: 6px; display: none; }
+    .msi-pago-mensual.visible { display: block; }
 
     .btn-primary { width: 100%; padding: 11px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 6px; }
     .btn-primary:hover { opacity: 0.88; }
     .btn-primary:active { transform: scale(0.98); }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .error-msg { display: none; font-size: 12px; color: var(--danger); background: rgba(240,92,92,0.1); border: 1px solid rgba(240,92,92,0.2); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+    .error-msg { display: none; font-size: 12px; color: var(--danger); background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.2); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
 
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
     .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
     .stat-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 4px; }
     .stat-value { font-size: 22px; font-weight: 500; font-family: var(--mono); }
-    #stat-total { color: var(--accent); }
 
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); }
@@ -84,15 +99,15 @@
     tbody tr:hover { background: var(--surface2); }
     td { padding: 12px 16px; color: var(--text); vertical-align: middle; }
     .td-nombre { font-weight: 500; }
-    .td-tarjeta { font-family: var(--mono); font-size: 12px; }
     .td-concepto { color: var(--muted); }
     .td-cantidad { font-family: var(--mono); font-weight: 500; color: var(--accent); text-align: right; }
+    .td-mensual { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
     .td-actions { text-align: center; width: 40px; }
     .btn-delete { background: none; border: none; cursor: pointer; color: var(--muted); padding: 4px 6px; border-radius: 6px; font-size: 15px; transition: color 0.2s, background 0.2s; line-height: 1; }
-    .btn-delete:hover { color: var(--danger); background: rgba(240,92,92,0.1); }
+    .btn-delete:hover { color: var(--danger); background: rgba(192,57,43,0.08); }
     .tag-tarjeta { display: inline-block; background: var(--accent-dim); color: var(--accent); font-size: 11px; font-family: var(--mono); padding: 2px 8px; border-radius: 20px; }
+    .tag-msi { display: inline-block; background: rgba(26,122,74,0.1); color: var(--success); font-size: 10px; font-family: var(--mono); padding: 2px 6px; border-radius: 20px; margin-left: 4px; }
 
-    /* CHART */
     .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
     .chart-wrap { position: relative; height: 220px; margin-top: 1rem; }
 
@@ -131,10 +146,10 @@
   </header>
 
   <div class="layout">
-    <!-- FORM -->
     <div class="card">
       <p class="card-title">// nuevo gasto</p>
       <div id="error-msg" class="error-msg"></div>
+
       <div class="field">
         <label>Nombre</label>
         <select id="inp-nombre">
@@ -166,13 +181,46 @@
         <input id="inp-concepto" type="text" placeholder="Ej. Supermercado, gasolina..." />
       </div>
       <div class="field">
-        <label>Cantidad (MXN)</label>
+        <label>Cantidad total (MXN)</label>
         <input id="inp-cantidad" type="number" placeholder="0.00" min="0" step="0.01" />
       </div>
+
+      <!-- MSI TOGGLE -->
+      <label class="msi-row" for="toggle-msi">
+        <div class="toggle-wrap">
+          <input type="checkbox" id="toggle-msi" />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="msi-label">Compra a MSI</span>
+        <span class="msi-badge">meses sin intereses</span>
+      </label>
+
+      <!-- MSI FIELDS -->
+      <div id="msi-fields">
+        <div class="msi-grid">
+          <div class="field" style="margin-bottom:0">
+            <label>Número de meses</label>
+            <select id="inp-meses">
+              <option value="">Selecciona</option>
+              <option>3</option>
+              <option>6</option>
+              <option>9</option>
+              <option>12</option>
+              <option>18</option>
+              <option>24</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Pago mensual</label>
+            <input id="inp-mensual" type="text" placeholder="$0.00" readonly style="background:var(--accent-dim);color:var(--accent);font-family:var(--mono);font-weight:500;" />
+          </div>
+        </div>
+      </div>
+
       <button class="btn-primary" id="btn-agregar">+ Agregar gasto</button>
     </div>
 
-    <!-- RIGHT PANEL -->
     <div>
       <div class="stats">
         <div class="stat">
@@ -185,7 +233,6 @@
         </div>
       </div>
 
-      <!-- TABLE -->
       <div class="section-header">
         <span class="section-title">// mis gastos</span>
         <button class="btn-export" id="btn-export">⬇ exportar excel</button>
@@ -198,7 +245,8 @@
               <th>Nombre</th>
               <th>Tarjeta</th>
               <th>Concepto</th>
-              <th style="text-align:right">Cantidad</th>
+              <th style="text-align:right">Total</th>
+              <th style="text-align:right">Mensual</th>
               <th></th>
             </tr>
           </thead>
@@ -206,7 +254,6 @@
         </table>
       </div>
 
-      <!-- CHART -->
       <div class="chart-card">
         <p class="card-title">// deuda por tarjeta</p>
         <div class="chart-wrap">
@@ -247,6 +294,32 @@
   let chartInstance = null;
   let gastosActuales = [];
 
+  // ── MSI logic ─────────────────────────────────────────
+  const toggleMSI  = document.getElementById('toggle-msi');
+  const msiFields  = document.getElementById('msi-fields');
+  const inpCantidad = document.getElementById('inp-cantidad');
+  const inpMeses   = document.getElementById('inp-meses');
+  const inpMensual = document.getElementById('inp-mensual');
+
+  function calcMensual() {
+    const cant  = parseFloat(inpCantidad.value);
+    const meses = parseInt(inpMeses.value);
+    if (!isNaN(cant) && cant > 0 && meses > 0) {
+      const mensual = cant / meses;
+      inpMensual.value = '$' + mensual.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    } else {
+      inpMensual.value = '';
+    }
+  }
+
+  toggleMSI.addEventListener('change', () => {
+    msiFields.classList.toggle('visible', toggleMSI.checked);
+    if (!toggleMSI.checked) { inpMeses.value = ''; inpMensual.value = ''; }
+  });
+
+  inpCantidad.addEventListener('input', calcMensual);
+  inpMeses.addEventListener('change', calcMensual);
+
   // ── Auth ──────────────────────────────────────────────
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -269,7 +342,7 @@
 
   document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-  // ── Firestore — solo gastos del usuario actual ────────
+  // ── Firestore ─────────────────────────────────────────
   function startListening(uid) {
     const col = collection(db, "gastos");
     const q   = query(col, where("registradoPorUID", "==", uid), orderBy("createdAt", "desc"));
@@ -291,31 +364,45 @@
     const nombre   = document.getElementById('inp-nombre').value;
     const tarjeta  = document.getElementById('inp-tarjeta').value;
     const concepto = document.getElementById('inp-concepto').value.trim();
-    const cantidad = parseFloat(document.getElementById('inp-cantidad').value);
+    const cantidad = parseFloat(inpCantidad.value);
+    const esMSI    = toggleMSI.checked;
+    const meses    = esMSI ? parseInt(inpMeses.value) : null;
     const errEl    = document.getElementById('error-msg');
     const btn      = document.getElementById('btn-agregar');
     const user     = auth.currentUser;
 
     if (!nombre || !tarjeta || !concepto || isNaN(cantidad) || cantidad <= 0) {
       errEl.textContent = 'Completa todos los campos correctamente.';
-      errEl.style.display = 'block';
-      return;
+      errEl.style.display = 'block'; return;
+    }
+    if (esMSI && (!meses || meses <= 0)) {
+      errEl.textContent = 'Selecciona el número de meses MSI.';
+      errEl.style.display = 'block'; return;
     }
     errEl.style.display = 'none';
     btn.disabled = true;
     btn.textContent = 'Guardando...';
 
     try {
-      await addDoc(collection(db, "gastos"), {
+      const data = {
         nombre, tarjeta, concepto, cantidad,
+        esMSI: esMSI,
+        meses: esMSI ? meses : null,
+        pagomensual: esMSI ? parseFloat((cantidad / meses).toFixed(2)) : null,
         createdAt: serverTimestamp(),
         registradoPor: user.displayName || user.email,
         registradoPorUID: user.uid
-      });
+      };
+      await addDoc(collection(db, "gastos"), data);
+      // reset
       document.getElementById('inp-nombre').value   = '';
       document.getElementById('inp-tarjeta').value  = '';
       document.getElementById('inp-concepto').value = '';
-      document.getElementById('inp-cantidad').value = '';
+      inpCantidad.value = '';
+      toggleMSI.checked = false;
+      msiFields.classList.remove('visible');
+      inpMeses.value = '';
+      inpMensual.value = '';
     } catch (e) {
       errEl.textContent = 'Error: ' + e.message;
       errEl.style.display = 'block';
@@ -331,30 +418,28 @@
   };
 
   // ── Render tabla ──────────────────────────────────────
+  function fmt(n) { return '$' + n.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
   function renderTabla(gastos) {
     const body  = document.getElementById('tabla-body');
     const tabla = document.getElementById('tabla');
     const empty = document.getElementById('empty-state');
     const total = gastos.reduce((s, g) => s + (g.cantidad || 0), 0);
 
-    document.getElementById('stat-total').textContent =
-      '$' + total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('stat-total').textContent = fmt(total);
     document.getElementById('stat-count').textContent = gastos.length;
 
-    if (gastos.length === 0) {
-      tabla.style.display = 'none';
-      empty.style.display = 'block';
-      return;
-    }
+    if (gastos.length === 0) { tabla.style.display = 'none'; empty.style.display = 'block'; return; }
     tabla.style.display = 'table';
     empty.style.display = 'none';
 
     body.innerHTML = gastos.map(g => `
       <tr>
         <td class="td-nombre">${g.nombre}</td>
-        <td class="td-tarjeta"><span class="tag-tarjeta">${g.tarjeta}</span></td>
+        <td><span class="tag-tarjeta">${g.tarjeta}</span>${g.esMSI ? `<span class="tag-msi">${g.meses}MSI</span>` : ''}</td>
         <td class="td-concepto">${g.concepto}</td>
-        <td class="td-cantidad">$${(g.cantidad).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+        <td class="td-cantidad">${fmt(g.cantidad)}</td>
+        <td class="td-mensual">${g.esMSI ? fmt(g.pagomensual) + '/mes' : '—'}</td>
         <td class="td-actions">
           <button class="btn-delete" onclick="eliminarGasto('${g.id}')" title="Eliminar">✕</button>
         </td>
@@ -362,57 +447,36 @@
     `).join('');
   }
 
-  // ── Gráfica por tarjeta ───────────────────────────────
+  // ── Gráfica ───────────────────────────────────────────
   function renderChart(gastos) {
     const totales = {};
-    gastos.forEach(g => {
-      totales[g.tarjeta] = (totales[g.tarjeta] || 0) + (g.cantidad || 0);
-    });
-
+    gastos.forEach(g => { totales[g.tarjeta] = (totales[g.tarjeta] || 0) + (g.cantidad || 0); });
     const labels  = Object.keys(totales).sort();
     const valores = labels.map(l => parseFloat(totales[l].toFixed(2)));
-
-    const colors = [
-      '#7c6af7','#4dba87','#f7a14d','#f05c5c','#4db8f7',
-      '#c46af7','#f7d74d','#4df7b8','#f74d9a','#7af74d'
-    ];
+    const colors  = ['#003A7E','#1a7a4a','#c07a00','#c0392b','#1565c0','#6a1a7a','#7a5c00','#005c5c','#7a1a3a','#2e7d32'];
 
     if (chartInstance) chartInstance.destroy();
-
     const ctx = document.getElementById('chart-tarjetas').getContext('2d');
     chartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
         datasets: [{
-          label: 'Total ($)',
-          data: valores,
-          backgroundColor: labels.map((_, i) => colors[i % colors.length] + 'cc'),
+          label: 'Total ($)', data: valores,
+          backgroundColor: labels.map((_, i) => colors[i % colors.length] + '33'),
           borderColor:     labels.map((_, i) => colors[i % colors.length]),
-          borderWidth: 1,
-          borderRadius: 6,
+          borderWidth: 2, borderRadius: 6,
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
+        responsive: true, maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => ' $' + ctx.parsed.y.toLocaleString('es-MX', { minimumFractionDigits: 2 })
-            }
-          }
+          tooltip: { callbacks: { label: ctx => ' ' + fmt(ctx.parsed.y) } }
         },
         scales: {
-          x: { ticks: { color: '#8e8d99', font: { family: 'DM Mono', size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
-          y: {
-            ticks: {
-              color: '#8e8d99', font: { family: 'DM Mono', size: 11 },
-              callback: v => '$' + v.toLocaleString('es-MX')
-            },
-            grid: { color: 'rgba(255,255,255,0.05)' }
-          }
+          x: { ticks: { color: '#4a6a9e', font: { family: 'DM Mono', size: 11 } }, grid: { color: 'rgba(0,58,126,0.07)' } },
+          y: { ticks: { color: '#4a6a9e', font: { family: 'DM Mono', size: 11 }, callback: v => '$' + v.toLocaleString('es-MX') }, grid: { color: 'rgba(0,58,126,0.07)' } }
         }
       }
     });
@@ -421,15 +485,15 @@
   // ── Exportar Excel ────────────────────────────────────
   document.getElementById('btn-export').addEventListener('click', () => {
     if (gastosActuales.length === 0) { alert('No hay gastos para exportar.'); return; }
-
     const datos = gastosActuales.map(g => ({
       Nombre:   g.nombre,
       Tarjeta:  g.tarjeta,
       Concepto: g.concepto,
-      Cantidad: g.cantidad,
+      'Total ($)': g.cantidad,
+      'MSI':    g.esMSI ? `${g.meses} meses` : 'No',
+      'Pago mensual ($)': g.esMSI ? g.pagomensual : '',
       'Registrado por': g.registradoPor || '',
     }));
-
     const ws = XLSX.utils.json_to_sheet(datos);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Gastos");
