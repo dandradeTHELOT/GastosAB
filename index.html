@@ -391,16 +391,15 @@
              onSnapshot, serverTimestamp, query, orderBy }
       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // ⬇️ REEMPLAZA CON TU CONFIG DE FIREBASE
     const firebaseConfig = {
-      apiKey:            "TU_API_KEY",
-      authDomain:        "TU_PROJECT.firebaseapp.com",
-      projectId:         "TU_PROJECT_ID",
-      storageBucket:     "TU_PROJECT.appspot.com",
-      messagingSenderId: "TU_SENDER_ID",
-      appId:             "TU_APP_ID"
+      apiKey:            "AIzaSyDQh0J4meBH5u-UmmCJpjBCHSYLFyeKvZs",
+      authDomain:        "gastotracker-43ccf.firebaseapp.com",
+      projectId:         "gastotracker-43ccf",
+      storageBucket:     "gastotracker-43ccf.firebasestorage.app",
+      messagingSenderId: "350898567323",
+      appId:             "1:350898567323:web:87ffaddb1e1b66db3f6e3e",
+      measurementId:     "G-3TWS0BNEJ5"
     };
-    // ⬆️ FIN DE CONFIG
 
     const configured = firebaseConfig.apiKey !== "TU_API_KEY";
     if (!configured) document.getElementById('config-notice').style.display = 'block';
