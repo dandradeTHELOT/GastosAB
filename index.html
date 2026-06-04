@@ -7,536 +7,434 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0e0e10;
-      --surface: #16161a;
-      --surface2: #1e1e24;
-      --border: rgba(255,255,255,0.07);
-      --border-hover: rgba(255,255,255,0.14);
-      --accent: #7c6af7;
-      --accent-dim: rgba(124,106,247,0.15);
-      --text: #f0eff5;
-      --muted: #8e8d99;
-      --danger: #f05c5c;
-      --success: #4dba87;
-      --mono: 'DM Mono', monospace;
-      --sans: 'DM Sans', sans-serif;
+      --bg: #0e0e10; --surface: #16161a; --surface2: #1e1e24;
+      --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.14);
+      --accent: #7c6af7; --accent-dim: rgba(124,106,247,0.15);
+      --text: #f0eff5; --muted: #8e8d99; --danger: #f05c5c; --success: #4dba87;
+      --mono: 'DM Mono', monospace; --sans: 'DM Sans', sans-serif;
     }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
 
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 1rem;
-    }
-
-    /* ── Login screen ── */
-    #login-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 80vh;
-    }
-
-    .login-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 2.5rem 2rem;
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-    }
-
-    .login-card h2 {
-      font-size: 1.3rem;
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      margin-bottom: 6px;
-    }
-
+    /* LOGIN */
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
+    .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 2.5rem 2rem; width: 100%; max-width: 360px; text-align: center; }
+    .login-card h2 { font-size: 1.3rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 6px; }
     .login-card h2 span { color: var(--accent); font-family: var(--mono); }
+    .login-card p { font-size: 13px; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+    .btn-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; background: var(--surface2); color: var(--text); border: 1px solid var(--border-hover); border-radius: 10px; font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: background 0.2s; }
+    .btn-google:hover { background: #2a2a32; }
 
-    .login-card p {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      line-height: 1.6;
-    }
-
-    .btn-google {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 12px;
-      background: var(--surface2);
-      color: var(--text);
-      border: 1px solid var(--border-hover);
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: var(--sans);
-      cursor: pointer;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .btn-google:hover { background: #2a2a32; border-color: rgba(255,255,255,0.22); }
-    .btn-google svg { flex-shrink: 0; }
-
-    /* ── App shell ── */
+    /* APP */
     #app-screen { display: none; }
-
-    header {
-      max-width: 960px;
-      margin: 0 auto 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1.25rem;
-    }
-
+    header { max-width: 1100px; margin: 0 auto 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 1.25rem; }
     header h1 { font-size: 1.4rem; font-weight: 500; letter-spacing: -0.02em; }
     header h1 span { color: var(--accent); font-family: var(--mono); }
-
     .header-right { display: flex; align-items: center; gap: 16px; }
-
-    #user-info { display: flex; align-items: center; gap: 8px; }
-    #user-avatar {
-      width: 30px; height: 30px; border-radius: 50%;
-      border: 1px solid var(--border-hover);
-    }
+    #user-avatar { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--border-hover); }
     #user-name { font-size: 13px; color: var(--muted); font-family: var(--mono); }
-
-    .btn-logout {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      border-radius: 7px;
-      padding: 5px 12px;
-      font-size: 12px;
-      font-family: var(--mono);
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
-
-    #status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--muted); display: inline-block;
-      margin-right: 6px; transition: background 0.3s;
-    }
+    #status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); display: inline-block; margin-right: 6px; transition: background 0.3s; }
     #status-dot.connected { background: var(--success); box-shadow: 0 0 6px var(--success); }
     #status-label { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+    .btn-logout { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 7px; padding: 5px 12px; font-size: 12px; font-family: var(--mono); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
 
-    .layout {
-      max-width: 960px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
+    .layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; align-items: start; }
 
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-    }
-
-    .card-title {
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 1.25rem;
-      font-family: var(--mono);
-    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+    .card-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; font-family: var(--mono); }
 
     .field { margin-bottom: 14px; }
     .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
-
-    .field input, .field select {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: var(--sans);
-      outline: none;
-      transition: border-color 0.2s;
-    }
+    .field input, .field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; color: var(--text); font-size: 14px; font-family: var(--sans); outline: none; transition: border-color 0.2s; }
     .field input:focus, .field select:focus { border-color: var(--accent); }
     .field input::placeholder { color: var(--muted); }
     .field select option { background: var(--surface2); }
     .field input[type="number"] { font-family: var(--mono); }
 
-    .btn-primary {
-      width: 100%; padding: 11px;
-      background: var(--accent); color: #fff;
-      border: none; border-radius: 8px;
-      font-size: 14px; font-weight: 500;
-      font-family: var(--sans); cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      margin-top: 6px;
-    }
+    .btn-primary { width: 100%; padding: 11px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; font-family: var(--sans); cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 6px; }
     .btn-primary:hover { opacity: 0.88; }
     .btn-primary:active { transform: scale(0.98); }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .error-msg {
-      display: none; font-size: 12px; color: var(--danger);
-      background: rgba(240,92,92,0.1);
-      border: 1px solid rgba(240,92,92,0.2);
-      border-radius: 8px; padding: 8px 12px; margin-bottom: 10px;
-    }
+    .error-msg { display: none; font-size: 12px; color: var(--danger); background: rgba(240,92,92,0.1); border: 1px solid rgba(240,92,92,0.2); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
 
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
-    .stat {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 14px 16px;
-    }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
     .stat-label { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-bottom: 4px; }
-    .stat-value { font-size: 22px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+    .stat-value { font-size: 22px; font-weight: 500; font-family: var(--mono); }
     #stat-total { color: var(--accent); }
 
-    .table-wrap {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden;
-    }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); }
+    .btn-export { display: flex; align-items: center; gap: 6px; background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 7px; padding: 5px 12px; font-size: 12px; font-family: var(--mono); cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+    .btn-export:hover { border-color: var(--success); color: var(--success); }
 
-    #empty-state {
-      padding: 3rem 1rem; text-align: center;
-      color: var(--muted); font-size: 13px; font-family: var(--mono);
-    }
-
+    .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1.5rem; }
+    #empty-state { padding: 3rem 1rem; text-align: center; color: var(--muted); font-size: 13px; font-family: var(--mono); }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     thead tr { border-bottom: 1px solid var(--border); }
-    th {
-      padding: 12px 16px; text-align: left;
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--muted); font-family: var(--mono);
-    }
+    th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: var(--mono); }
     tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: var(--surface2); }
     td { padding: 12px 16px; color: var(--text); vertical-align: middle; }
-
     .td-nombre { font-weight: 500; }
-    .td-tarjeta { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+    .td-tarjeta { font-family: var(--mono); font-size: 12px; }
     .td-concepto { color: var(--muted); }
     .td-cantidad { font-family: var(--mono); font-weight: 500; color: var(--accent); text-align: right; }
-    .td-user { font-size: 11px; color: var(--muted); font-family: var(--mono); }
     .td-actions { text-align: center; width: 40px; }
-
-    .btn-delete {
-      background: none; border: none; cursor: pointer;
-      color: var(--muted); padding: 4px 6px;
-      border-radius: 6px; font-size: 15px;
-      transition: color 0.2s, background 0.2s; line-height: 1;
-    }
+    .btn-delete { background: none; border: none; cursor: pointer; color: var(--muted); padding: 4px 6px; border-radius: 6px; font-size: 15px; transition: color 0.2s, background 0.2s; line-height: 1; }
     .btn-delete:hover { color: var(--danger); background: rgba(240,92,92,0.1); }
+    .tag-tarjeta { display: inline-block; background: var(--accent-dim); color: var(--accent); font-size: 11px; font-family: var(--mono); padding: 2px 8px; border-radius: 20px; }
 
-    .tag-tarjeta {
-      display: inline-block; background: var(--accent-dim);
-      color: var(--accent); font-size: 11px; font-family: var(--mono);
-      padding: 2px 8px; border-radius: 20px;
-    }
+    /* CHART */
+    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+    .chart-wrap { position: relative; height: 220px; margin-top: 1rem; }
 
-    #config-notice {
-      max-width: 960px; margin: 0 auto 1.5rem;
-      background: rgba(124,106,247,0.08);
-      border: 1px solid rgba(124,106,247,0.25);
-      border-radius: 10px; padding: 14px 18px;
-      font-size: 13px; color: var(--muted);
-      line-height: 1.6; display: none;
-    }
-    #config-notice strong { color: var(--accent); }
-    #config-notice code {
-      background: var(--surface2); padding: 1px 6px;
-      border-radius: 4px; font-family: var(--mono);
-      font-size: 12px; color: var(--text);
-    }
-
-    @media (max-width: 680px) {
-      .layout { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 720px) { .layout { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <!-- ── CONFIG NOTICE ── -->
-  <div id="config-notice">
-    ⚠️ <strong>Configuración requerida:</strong> Reemplaza los valores de
-    <code>firebaseConfig</code> con los de tu proyecto en
-    <a href="https://console.firebase.google.com" style="color:var(--accent)">Firebase Console</a>
-    y activa <strong>Authentication → Google</strong> y <strong>Firestore Database</strong>.
+<div id="login-screen">
+  <div class="login-card">
+    <h2>gasto<span>tracker</span></h2>
+    <p>Inicia sesión para registrar y consultar tus gastos.</p>
+    <button class="btn-google" id="btn-google-login">
+      <svg width="18" height="18" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continuar con Google
+    </button>
   </div>
+</div>
 
-  <!-- ── LOGIN SCREEN ── -->
-  <div id="login-screen">
-    <div class="login-card">
-      <h2>gasto<span>tracker</span></h2>
-      <p>Inicia sesión para registrar y consultar gastos desde cualquier dispositivo.</p>
-      <button class="btn-google" id="btn-google-login">
-        <svg width="18" height="18" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.35-8.16 2.35-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Continuar con Google
-      </button>
+<div id="app-screen">
+  <header>
+    <h1>gasto<span>tracker</span></h1>
+    <div class="header-right">
+      <div><span id="status-dot"></span><span id="status-label">conectando...</span></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <img id="user-avatar" src="" alt="avatar" />
+        <span id="user-name"></span>
+      </div>
+      <button class="btn-logout" id="btn-logout">salir</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- FORM -->
+    <div class="card">
+      <p class="card-title">// nuevo gasto</p>
+      <div id="error-msg" class="error-msg"></div>
+      <div class="field">
+        <label>Nombre</label>
+        <select id="inp-nombre">
+          <option value="">Selecciona nombre</option>
+          <option>Angeles AB</option>
+          <option>Brenda AB</option>
+          <option>Daniel AB</option>
+          <option>Rogelio AB</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tarjeta</label>
+        <select id="inp-tarjeta">
+          <option value="">Selecciona tarjeta</option>
+          <option>Banorte</option>
+          <option>HSBC</option>
+          <option>KLAR</option>
+          <option>NU</option>
+          <option>PLATA</option>
+          <option>Rappi</option>
+          <option>Santander</option>
+          <option>Volaris DESPEGAR</option>
+          <option>Volaris INVEX</option>
+          <option>Volaris SAM'S</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Concepto de gasto</label>
+        <input id="inp-concepto" type="text" placeholder="Ej. Supermercado, gasolina..." />
+      </div>
+      <div class="field">
+        <label>Cantidad (MXN)</label>
+        <input id="inp-cantidad" type="number" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <button class="btn-primary" id="btn-agregar">+ Agregar gasto</button>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">mi total</div>
+          <div class="stat-value" id="stat-total" style="color:var(--accent)">$0.00</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">mis registros</div>
+          <div class="stat-value" id="stat-count">0</div>
+        </div>
+      </div>
+
+      <!-- TABLE -->
+      <div class="section-header">
+        <span class="section-title">// mis gastos</span>
+        <button class="btn-export" id="btn-export">⬇ exportar excel</button>
+      </div>
+      <div class="table-wrap">
+        <div id="empty-state">— sin gastos registrados —</div>
+        <table id="tabla" style="display:none;">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tarjeta</th>
+              <th>Concepto</th>
+              <th style="text-align:right">Cantidad</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabla-body"></tbody>
+        </table>
+      </div>
+
+      <!-- CHART -->
+      <div class="chart-card">
+        <p class="card-title">// deuda por tarjeta</p>
+        <div class="chart-wrap">
+          <canvas id="chart-tarjetas"></canvas>
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- ── APP SCREEN ── -->
-  <div id="app-screen">
-    <header>
-      <h1>gasto<span>tracker</span></h1>
-      <div class="header-right">
-        <div>
-          <span id="status-dot"></span>
-          <span id="status-label">conectando...</span>
-        </div>
-        <div id="user-info">
-          <img id="user-avatar" src="" alt="avatar" />
-          <span id="user-name"></span>
-        </div>
-        <button class="btn-logout" id="btn-logout">salir</button>
-      </div>
-    </header>
+<script type="module">
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, addDoc, deleteDoc, doc,
+           onSnapshot, serverTimestamp, query, orderBy, where }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <div class="layout">
-      <div class="card">
-        <p class="card-title">// nuevo gasto</p>
-        <div id="error-msg" class="error-msg"></div>
-        <div class="field">
-          <label>Nombre</label>
-          <input id="inp-nombre" type="text" placeholder="Ej. Carlos López" />
-        </div>
-        <div class="field">
-          <label>Tarjeta</label>
-          <select id="inp-tarjeta">
-            <option value="">Selecciona tarjeta</option>
-            <option>Visa *4521</option>
-            <option>Mastercard *8834</option>
-            <option>Amex *2290</option>
-            <option>Débito *1190</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Concepto de gasto</label>
-          <input id="inp-concepto" type="text" placeholder="Ej. Supermercado, gasolina..." />
-        </div>
-        <div class="field">
-          <label>Cantidad (MXN)</label>
-          <input id="inp-cantidad" type="number" placeholder="0.00" min="0" step="0.01" />
-        </div>
-        <button class="btn-primary" id="btn-agregar">+ Agregar gasto</button>
-      </div>
+  const firebaseConfig = {
+    apiKey:            "AIzaSyDQh0J4meBH5u-UmmCJpjBCHSYLFyeKvZs",
+    authDomain:        "gastotracker-43ccf.firebaseapp.com",
+    projectId:         "gastotracker-43ccf",
+    storageBucket:     "gastotracker-43ccf.firebasestorage.app",
+    messagingSenderId: "350898567323",
+    appId:             "1:350898567323:web:87ffaddb1e1b66db3f6e3e",
+    measurementId:     "G-3TWS0BNEJ5"
+  };
 
-      <div>
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-label">total</div>
-            <div class="stat-value" id="stat-total">$0.00</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">registros</div>
-            <div class="stat-value" id="stat-count">0</div>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <div id="empty-state">— sin gastos registrados —</div>
-          <table id="tabla" style="display:none;">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Tarjeta</th>
-                <th>Concepto</th>
-                <th style="text-align:right">Cantidad</th>
-                <th>Registrado por</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="tabla-body"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+  const app      = initializeApp(firebaseConfig);
+  const auth     = getAuth(app);
+  const db       = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+  const dot      = document.getElementById('status-dot');
+  const label    = document.getElementById('status-label');
 
-  <!-- =====================================================
-       FIREBASE CONFIG
-       1. Ve a https://console.firebase.google.com
-       2. Crea proyecto → agrega app web → copia firebaseConfig
-       3. Authentication → Sign-in method → habilita Google
-       4. Firestore Database → crear base de datos
-       5. En Authorized domains agrega tu dominio de GitHub Pages
-  ====================================================== -->
-  <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, deleteDoc, doc,
-             onSnapshot, serverTimestamp, query, orderBy }
-      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  let unsubscribe = null;
+  let chartInstance = null;
+  let gastosActuales = [];
 
-    const firebaseConfig = {
-      apiKey:            "AIzaSyDQh0J4meBH5u-UmmCJpjBCHSYLFyeKvZs",
-      authDomain:        "gastotracker-43ccf.firebaseapp.com",
-      projectId:         "gastotracker-43ccf",
-      storageBucket:     "gastotracker-43ccf.firebasestorage.app",
-      messagingSenderId: "350898567323",
-      appId:             "1:350898567323:web:87ffaddb1e1b66db3f6e3e",
-      measurementId:     "G-3TWS0BNEJ5"
-    };
+  // ── Auth ──────────────────────────────────────────────
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app-screen').style.display  = 'block';
+      document.getElementById('user-name').textContent     = user.displayName || user.email;
+      document.getElementById('user-avatar').src           = user.photoURL || '';
+      startListening(user.uid);
+    } else {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('app-screen').style.display   = 'none';
+      if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    }
+  });
 
-    const configured = firebaseConfig.apiKey !== "TU_API_KEY";
-    if (!configured) document.getElementById('config-notice').style.display = 'block';
+  document.getElementById('btn-google-login').addEventListener('click', async () => {
+    try { await signInWithPopup(auth, provider); }
+    catch (e) { alert('Error al iniciar sesión: ' + e.message); }
+  });
 
-    const app      = initializeApp(firebaseConfig);
-    const auth     = getAuth(app);
-    const db       = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-    const dot      = document.getElementById('status-dot');
-    const label    = document.getElementById('status-label');
+  document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
 
-    let unsubscribeSnapshot = null;
-
-    // ── Auth state ──────────────────────────────────────
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app-screen').style.display  = 'block';
-        document.getElementById('user-name').textContent     = user.displayName || user.email;
-        document.getElementById('user-avatar').src           = user.photoURL || '';
-        startListening();
-      } else {
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('app-screen').style.display   = 'none';
-        if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
-        dot.className = '';
-        dot.style.background = 'var(--muted)';
-        label.textContent = 'desconectado';
-      }
+  // ── Firestore — solo gastos del usuario actual ────────
+  function startListening(uid) {
+    const col = collection(db, "gastos");
+    const q   = query(col, where("registradoPorUID", "==", uid), orderBy("createdAt", "desc"));
+    unsubscribe = onSnapshot(q, (snap) => {
+      dot.className = 'connected';
+      label.textContent = 'en línea';
+      gastosActuales = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTabla(gastosActuales);
+      renderChart(gastosActuales);
+    }, (err) => {
+      dot.style.background = 'var(--danger)';
+      label.textContent = 'error';
+      console.error(err);
     });
+  }
 
-    // ── Login ────────────────────────────────────────────
-    document.getElementById('btn-google-login').addEventListener('click', async () => {
-      try {
-        await signInWithPopup(auth, provider);
-      } catch (e) {
-        console.error('Login error:', e);
-        alert('Error al iniciar sesión: ' + e.message);
-      }
-    });
+  // ── Agregar ───────────────────────────────────────────
+  document.getElementById('btn-agregar').addEventListener('click', async () => {
+    const nombre   = document.getElementById('inp-nombre').value;
+    const tarjeta  = document.getElementById('inp-tarjeta').value;
+    const concepto = document.getElementById('inp-concepto').value.trim();
+    const cantidad = parseFloat(document.getElementById('inp-cantidad').value);
+    const errEl    = document.getElementById('error-msg');
+    const btn      = document.getElementById('btn-agregar');
+    const user     = auth.currentUser;
 
-    // ── Logout ───────────────────────────────────────────
-    document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+    if (!nombre || !tarjeta || !concepto || isNaN(cantidad) || cantidad <= 0) {
+      errEl.textContent = 'Completa todos los campos correctamente.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
 
-    // ── Firestore listener ───────────────────────────────
-    function startListening() {
-      const col = collection(db, "gastos");
-      const q   = query(col, orderBy("createdAt", "desc"));
-      unsubscribeSnapshot = onSnapshot(q, (snap) => {
-        dot.className = 'connected';
-        label.textContent = 'en línea';
-        renderTabla(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-      }, (err) => {
-        dot.style.background = 'var(--danger)';
-        label.textContent = 'error';
-        console.error(err);
+    try {
+      await addDoc(collection(db, "gastos"), {
+        nombre, tarjeta, concepto, cantidad,
+        createdAt: serverTimestamp(),
+        registradoPor: user.displayName || user.email,
+        registradoPorUID: user.uid
       });
+      document.getElementById('inp-nombre').value   = '';
+      document.getElementById('inp-tarjeta').value  = '';
+      document.getElementById('inp-concepto').value = '';
+      document.getElementById('inp-cantidad').value = '';
+    } catch (e) {
+      errEl.textContent = 'Error: ' + e.message;
+      errEl.style.display = 'block';
     }
+    btn.disabled = false;
+    btn.textContent = '+ Agregar gasto';
+  });
 
-    // ── Agregar gasto ────────────────────────────────────
-    document.getElementById('btn-agregar').addEventListener('click', async () => {
-      const nombre   = document.getElementById('inp-nombre').value.trim();
-      const tarjeta  = document.getElementById('inp-tarjeta').value;
-      const concepto = document.getElementById('inp-concepto').value.trim();
-      const cantidad = parseFloat(document.getElementById('inp-cantidad').value);
-      const errEl    = document.getElementById('error-msg');
-      const btn      = document.getElementById('btn-agregar');
-      const user     = auth.currentUser;
+  // ── Eliminar ──────────────────────────────────────────
+  window.eliminarGasto = async (id) => {
+    if (!confirm('¿Eliminar este gasto?')) return;
+    await deleteDoc(doc(db, "gastos", id));
+  };
 
-      if (!nombre || !tarjeta || !concepto || isNaN(cantidad) || cantidad <= 0) {
-        errEl.textContent = 'Completa todos los campos correctamente.';
-        errEl.style.display = 'block';
-        return;
-      }
-      errEl.style.display = 'none';
-      btn.disabled = true;
-      btn.textContent = 'Guardando...';
+  // ── Render tabla ──────────────────────────────────────
+  function renderTabla(gastos) {
+    const body  = document.getElementById('tabla-body');
+    const tabla = document.getElementById('tabla');
+    const empty = document.getElementById('empty-state');
+    const total = gastos.reduce((s, g) => s + (g.cantidad || 0), 0);
 
-      try {
-        await addDoc(collection(db, "gastos"), {
-          nombre, tarjeta, concepto, cantidad,
-          createdAt: serverTimestamp(),
-          registradoPor: user.displayName || user.email,
-          registradoPorUID: user.uid
-        });
-        document.getElementById('inp-nombre').value   = '';
-        document.getElementById('inp-tarjeta').value  = '';
-        document.getElementById('inp-concepto').value = '';
-        document.getElementById('inp-cantidad').value = '';
-      } catch (e) {
-        errEl.textContent = 'Error al guardar: ' + e.message;
-        errEl.style.display = 'block';
-      }
+    document.getElementById('stat-total').textContent =
+      '$' + total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('stat-count').textContent = gastos.length;
 
-      btn.disabled = false;
-      btn.textContent = '+ Agregar gasto';
+    if (gastos.length === 0) {
+      tabla.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+    tabla.style.display = 'table';
+    empty.style.display = 'none';
+
+    body.innerHTML = gastos.map(g => `
+      <tr>
+        <td class="td-nombre">${g.nombre}</td>
+        <td class="td-tarjeta"><span class="tag-tarjeta">${g.tarjeta}</span></td>
+        <td class="td-concepto">${g.concepto}</td>
+        <td class="td-cantidad">$${(g.cantidad).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
+        <td class="td-actions">
+          <button class="btn-delete" onclick="eliminarGasto('${g.id}')" title="Eliminar">✕</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  // ── Gráfica por tarjeta ───────────────────────────────
+  function renderChart(gastos) {
+    const totales = {};
+    gastos.forEach(g => {
+      totales[g.tarjeta] = (totales[g.tarjeta] || 0) + (g.cantidad || 0);
     });
 
-    // ── Eliminar gasto ───────────────────────────────────
-    window.eliminarGasto = async (id) => {
-      if (!confirm('¿Eliminar este gasto?')) return;
-      await deleteDoc(doc(db, "gastos", id));
-    };
+    const labels  = Object.keys(totales).sort();
+    const valores = labels.map(l => parseFloat(totales[l].toFixed(2)));
 
-    // ── Render tabla ─────────────────────────────────────
-    function renderTabla(gastos) {
-      const body  = document.getElementById('tabla-body');
-      const tabla = document.getElementById('tabla');
-      const empty = document.getElementById('empty-state');
-      const total = gastos.reduce((s, g) => s + (g.cantidad || 0), 0);
+    const colors = [
+      '#7c6af7','#4dba87','#f7a14d','#f05c5c','#4db8f7',
+      '#c46af7','#f7d74d','#4df7b8','#f74d9a','#7af74d'
+    ];
 
-      document.getElementById('stat-total').textContent =
-        '$' + total.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      document.getElementById('stat-count').textContent = gastos.length;
+    if (chartInstance) chartInstance.destroy();
 
-      if (gastos.length === 0) {
-        tabla.style.display = 'none';
-        empty.style.display = 'block';
-        return;
+    const ctx = document.getElementById('chart-tarjetas').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Total ($)',
+          data: valores,
+          backgroundColor: labels.map((_, i) => colors[i % colors.length] + 'cc'),
+          borderColor:     labels.map((_, i) => colors[i % colors.length]),
+          borderWidth: 1,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ' $' + ctx.parsed.y.toLocaleString('es-MX', { minimumFractionDigits: 2 })
+            }
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#8e8d99', font: { family: 'DM Mono', size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: {
+            ticks: {
+              color: '#8e8d99', font: { family: 'DM Mono', size: 11 },
+              callback: v => '$' + v.toLocaleString('es-MX')
+            },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          }
+        }
       }
-      tabla.style.display = 'table';
-      empty.style.display = 'none';
+    });
+  }
 
-      body.innerHTML = gastos.map(g => `
-        <tr>
-          <td class="td-nombre">${g.nombre}</td>
-          <td class="td-tarjeta"><span class="tag-tarjeta">${g.tarjeta}</span></td>
-          <td class="td-concepto">${g.concepto}</td>
-          <td class="td-cantidad">$${(g.cantidad).toLocaleString('es-MX', { minimumFractionDigits: 2 })}</td>
-          <td class="td-user">${g.registradoPor || '—'}</td>
-          <td class="td-actions">
-            <button class="btn-delete" onclick="eliminarGasto('${g.id}')" title="Eliminar">✕</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-  </script>
+  // ── Exportar Excel ────────────────────────────────────
+  document.getElementById('btn-export').addEventListener('click', () => {
+    if (gastosActuales.length === 0) { alert('No hay gastos para exportar.'); return; }
 
+    const datos = gastosActuales.map(g => ({
+      Nombre:   g.nombre,
+      Tarjeta:  g.tarjeta,
+      Concepto: g.concepto,
+      Cantidad: g.cantidad,
+      'Registrado por': g.registradoPor || '',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(datos);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Gastos");
+    XLSX.writeFile(wb, "gastos.xlsx");
+  });
+</script>
 </body>
 </html>
