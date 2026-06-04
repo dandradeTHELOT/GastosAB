@@ -491,7 +491,7 @@
       Concepto: g.concepto,
       'Total ($)': g.cantidad,
       'MSI':    g.esMSI ? `${g.meses} meses` : 'No',
-      'Pago mensual ($)': g.esMSI ? g.pagomensual : '',
+      'Pago mensual ($)': g.esMSI ? g.pagomensual : g.cantidad,
       'Registrado por': g.registradoPor || '',
     }));
     const ws = XLSX.utils.json_to_sheet(datos);
